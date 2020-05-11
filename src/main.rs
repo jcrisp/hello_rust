@@ -26,25 +26,11 @@ fn main() {
 
     let new_service = || {
         service_fn_ok(|req| {
+
             let params = parse_params(req.uri());
+            let table = get_table_from_params(params);
 
-            let mut table: u16 = 1;
-            match params.get(&"table".to_string()) {
-                Some(number) => {
-                    match number.parse::<u16>() { 
-                        Ok(n) => { table = n; },
-                        Err(_e) => {},
-                    }
-                },
-                _ => {},
-            };
-
-            let mut text = format!("{} TIMES TABLES\n", table);
-            let times = vec!(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12);
-            for &t in times.iter() {
-                text.push_str(&format!("\n{} x {} = {}", t, table, t * table));
-            }
-
+            let text = generate_times_table_text(table);
             Response::new(Body::from(text))
         })
     };
@@ -58,6 +44,15 @@ fn main() {
     rt::run(server);
 }
 
+fn generate_times_table_text(table: u16) -> String {
+    let mut text = format!("{} TIMES TABLES\n", table);
+    let times = vec!(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12);
+    for &t in times.iter() {
+        text.push_str(&format!("\n{} x {} = {}", t, table, t * table));
+    }
+    return text;
+}
+
 fn parse_params(uri: &hyper::Uri) -> HashMap<String, String> {
     let params: HashMap<String, String> = uri.query()
         .map(|v| {
@@ -67,4 +62,18 @@ fn parse_params(uri: &hyper::Uri) -> HashMap<String, String> {
         })
         .unwrap_or_else(HashMap::new);
     return params
+}
+
+fn get_table_from_params(params: HashMap<String, String>) -> u16 {
+    let mut table: u16 = 1;
+    match params.get(&"table".to_string()) {
+        Some(number) => {
+            match number.parse::<u16>() { 
+                Ok(n) => { table = n; },
+                Err(_e) => {},
+            }
+        },
+        _ => {},
+    };
+    return table;
 }
