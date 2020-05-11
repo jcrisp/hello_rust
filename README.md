@@ -1,14 +1,18 @@
-# Simple Times Table Rust Service
+## Simple Times Table Rust Service
 
-## SETUP
+### Setup
 
-cargo install && target/release/hellorust
+#### Local
 
-### OR
+```cargo install && target/release/hellorust
+```
 
-docker build -t jcrisp/hello_rust hello_rust
+#### Docker
+
+```docker build -t jcrisp/hello_rust hello_rust
 docker run -p 8080:8080 jcrisp/hello_rust
+```
 
-## HIT THE SERVICE
+### Hit the service
 
 http://localhost:8080/?table=3
