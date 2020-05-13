@@ -1,0 +1,19 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: hellorust-gke
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: hellorust
+  template:
+    metadata:
+      labels:
+        app: hellorust
+    spec:
+      containers:
+      - name: hellorust-app
+        image: gcr.io/hellorust/hellorust-gke:latest
+        ports:
+        - containerPort: 8080
